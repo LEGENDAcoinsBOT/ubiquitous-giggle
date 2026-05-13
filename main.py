@@ -106,7 +106,6 @@ async def webhook(req: Request):
                 keyboard
             )
 
-    return {"ok": True}
-
-@app.post("/crypto")
+ @app.post("/crypto")
 async def crypto_webhook(req: Request):
+    return {"ok": True}
