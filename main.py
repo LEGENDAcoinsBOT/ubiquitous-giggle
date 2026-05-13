@@ -107,3 +107,7 @@ async def webhook(req: Request):
             )
 
     return {"ok": True}
+
+@router.message(F.successful_payment)
+async def successful_payment(message: Message):
+    await message.answer("✅ Оплата успешна!")
