@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 import requests
 
 BOT_TOKEN = "8650861652:AAE0Q4-ONNBPj8Pv9YxAp6abJZN0Qhk1in0"
+CRYPTO_TOKEN = "581231:AAvJOWsgCmW0tFzPi1q0OnTLzf4ty7SHQuq"
 
 app = FastAPI()
 
@@ -18,6 +19,26 @@ def send_message(chat_id, text, keyboard=None):
         payload["reply_markup"] = keyboard
 
     requests.post(url, json=payload)
+
+
+def create_invoice(amount=1):
+    url = "https://pay.crypt.bot/api/createInvoice"
+
+    headers = {
+        "Crypto-Pay-API-Token": CRYPTO_TOKEN
+    }
+
+    payload = {
+        "asset": "USDT",
+        "amount": amount,
+        "description": "Оплата заказа"
+    }
+
+    r = requests.post(url, json=payload, headers=headers)
+
+    print(r.text)
+
+    return r.json()
 
 
 @app.get("/")
@@ -62,13 +83,27 @@ async def webhook(req: Request):
         chat_id = query["message"]["chat"]["id"]
         data_btn = query["data"]
 
-        if data_btn == "coins":
-            send_message(chat_id, "Введите username TikTok")
+        invoice = create_invoice(1)
 
-        elif data_btn == "stars":
-            send_message(chat_id, "Введите Telegram username")
+        if invoice.get("ok"):
 
-        elif data_btn == "premium":
-            send_message(chat_id, "Выберите срок Premium")
+            pay_url = invoice["result"]["pay_url"]
+
+            keyboard = {
+                "inline_keyboard": [
+                    [
+                        {
+                            "text": "💳 Оплатить",
+                            "url": pay_url
+                        }
+                    ]
+                ]
+            }
+
+            send_message(
+                chat_id,
+                "Для продолжения оплатите счёт:",
+                keyboard
+            )
 
     return {"ok": True}
