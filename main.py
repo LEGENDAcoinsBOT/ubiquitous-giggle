@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 import requests
 
-BOT_TOKEN = "ТВОЙ_НОВЫЙ_ТОКЕН"
+BOT_TOKEN = "8650861652:AAE0Q4-ONNBPj8Pv9YxAp6abJZN0Qhk1in0"
 
 app = FastAPI()
 
