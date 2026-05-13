@@ -108,6 +108,5 @@ async def webhook(req: Request):
 
     return {"ok": True}
 
-@dp.message(F.successful_payment)
-async def successful_payment(message: Message):
-    await message.answer("✅ Оплата прошла успешно!")
+@app.post("/crypto")
+async def crypto_webhook(req: Request):
